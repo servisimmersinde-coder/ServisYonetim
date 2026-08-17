@@ -27,6 +27,10 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f0f2f5;color:#1f2937}
 .btn-s{padding:5px 10px;font-size:12px}
 .btn-tel{background:#25d366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:var(--r);font-size:12px;font-weight:600}
 .btn-tel:hover{background:#1da851}
+.btn-wa{background:#25d366;color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;transition:.15s}
+.btn-wa:hover{background:#1da851}
+.btn-sms{background:#0891b2;color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;transition:.15s}
+.btn-sms:hover{background:#0e7490}
 .err{color:var(--d);font-size:12px;margin-bottom:10px;padding:8px;background:#fee2e2;border-radius:6px}
 .ok-msg{color:#166534;font-size:12px;margin-bottom:10px;padding:8px;background:#dcfce7;border-radius:6px}
 .layout{display:flex;min-height:100vh}
@@ -61,7 +65,7 @@ table tr:hover{background:#f9fafb}
 .mo{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
 .md{background:#fff;border-radius:12px;padding:24px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .md h2{margin-bottom:16px;font-size:18px}
-.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .sb{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .sb input,.sb select{flex:1;min-width:120px;padding:9px 12px;border:2px solid var(--border);border-radius:var(--r);font-size:13px}
@@ -72,6 +76,42 @@ table tr:hover{background:#f9fafb}
 @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 .slide-in{animation:slideIn .3s ease}
 @media print{.side,.ph,.btn,.sb,.no-print{display:none!important}.main{margin:0!important;padding:0!important}}
+@media(max-width:768px){
+  .side{transform:translateX(-100%);transition:transform .3s;width:260px;z-index:200}
+  .side.open{transform:translateX(0)}
+  .side-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:150}
+  .side-overlay.open{display:block}
+  .main{margin-left:0!important;padding:12px!important;padding-top:60px!important}
+  .mob-top{display:flex!important;position:fixed;top:0;left:0;right:0;height:54px;background:linear-gradient(135deg,#0f172a,#1e3a8a);z-index:100;align-items:center;padding:0 12px;gap:10px}
+  .mob-top .mob-title{color:#fff;font-size:15px;font-weight:700;flex:1}
+  .mob-top .mob-avatar{width:34px;height:34px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff}
+  .hamburger{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;padding:6px}
+  .sg{grid-template-columns:1fr 1fr!important}
+  .fr{grid-template-columns:1fr!important}
+  .md{max-width:100%;max-height:95vh;padding:16px!important;margin:8px!important;border-radius:10px}
+  .mo{padding:0}
+  table{font-size:11px}
+  table th,table td{padding:7px 8px}
+  .yeni-is-btn{padding:10px 16px;font-size:12px}
+  .ph h1{font-size:17px}
+  .ph{margin-bottom:14px}
+  .is-kart .kart-musteri{font-size:14px}
+  .is-kart .kart-bilgi{font-size:11px}
+  .is-kart .kart-aksiyon{flex-direction:column}
+  .is-kart .kart-aksiyon .btn{width:100%;text-align:center;justify-content:center}
+  .sb{flex-direction:column}
+  .sb input,.sb select{min-width:0}
+  .card{padding:14px}
+  .form-bolum{padding:12px}
+  .bildirim-toast{left:12px;right:12px;max-width:none}
+  .basari-toast{left:12px;right:12px}
+  .profil-card{max-width:100%}
+  .chart-container{padding:14px}
+  .sc{padding:12px;gap:8px}
+  .si{width:36px;height:36px;font-size:16px}
+  .sc h3{font-size:16px}
+  .login-card{padding:24px}
+}
 .tc2{text-align:center;padding:36px;color:#6b7280}.tc2 .eic{font-size:44px;margin-bottom:10px}
 .flex{display:flex}.aic{align-items:center}.jcsb{justify-content:space-between}.g2{gap:8px}.mb2{margin-bottom:8px}.mb4{margin-bottom:16px}
 .is-kart{background:#fff;border:2px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;transition:.2s}
@@ -94,8 +134,19 @@ table tr:hover{background:#f9fafb}
 .foto-yukle-btn{width:80px;height:80px;border:2px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:24px;color:#9ca3af;transition:.2s;background:transparent}
 .foto-yukle-btn:hover{border-color:var(--p);color:var(--p)}
 .basari-toast{position:fixed;top:20px;right:20px;background:#16a34a;color:#fff;padding:14px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:slideIn .3s ease}
+.bildirim-toast{position:fixed;top:20px;right:20px;background:#2563eb;color:#fff;padding:14px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:slideIn .3s ease;display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:420px}
+.bildirim-toast .btn{font-size:11px;padding:5px 12px;white-space:nowrap}
 .profil-card{max-width:500px}
 .profil-avatar{width:80px;height:80px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff;margin:0 auto 16px}
+.chart-container{background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.12);padding:20px;margin-bottom:16px}
+.chart-container h3{font-size:14px;margin-bottom:12px}
+.chart-canvas{width:100%;max-height:200px}
+.bildirim-gecmisi{margin-top:12px;background:#f9fafb;border-radius:8px;padding:12px}
+.bildirim-gecmisi h4{font-size:13px;margin-bottom:8px}
+.bildirim-gecmisi-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:12px}
+.bildirim-gecmisi-item:last-child{border-bottom:none}
+.bildirim-gecmisi-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.bildirim-gecmisi-mesaj{color:#6b7280;margin-top:2px;word-break:break-word}
 </style>
 </head>
 <body>
@@ -130,6 +181,123 @@ function sonAtananServis(){if(!aktifKullanici||yoneticiMi(aktifKullanici))return
 function showToast(msg){
   const t=document.createElement('div');t.className='basari-toast';t.textContent=msg;document.body.appendChild(t);
   setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},3000);
+}
+
+function bildirimMesajiOlustur(servis){
+  const m=getMusteri(servis.musteriId);
+  const musteriAdi=m?m.adSoyad:'Musteri';
+  const urun=servis.urun||'urun';
+  const durum=durumAd(servis.durum);
+  const fisNo=servis.fisNo;
+  return`Sayin ${musteriAdi}, ${urun} servisiniz hakkinda bilgilendirme: ${durum}. Servis No: ${fisNo}. Servis Yonetim Sistemi`;
+}
+
+function bildirimGonder(servisId,tip){
+  const s=db.servisler.find(x=>x.id===servisId);
+  if(!s)return;
+  const m=getMusteri(s.musteriId);
+  if(!m||!m.telefon){alert('Musteri telefon numarasi bulunamadi');return;}
+  const mesaj=bildirimMesajiOlustur(s);
+  const telefonRaw=m.telefon.replace(/\s/g,'').replace(/^0/,'');
+  const encodedMesaj=encodeURIComponent(mesaj);
+  if(tip==='whatsapp'){
+    window.open(`https://wa.me/90${telefonRaw}?text=${encodedMesaj}`,'_blank');
+  }else{
+    window.open(`sms:90${telefonRaw}?body=${encodedMesaj}`,'_blank');
+  }
+  if(!s.bildirimler)s.bildirimler=[];
+  s.bildirimler.push({tip,tarih:new Date().toISOString(),mesaj});
+  apiFetch(`/api/servis/${servisId}`,'PUT',{bildirimler:s.bildirimler});
+  showToast(`${tip==='whatsapp'?'WhatsApp':'SMS'} bildirimi gonderildi`);
+}
+
+function bildirimGecmisiHtml(servis){
+  const bildirimler=servis.bildirimler||[];
+  if(bildirimler.length===0)return'';
+  return`<div class="bildirim-gecmisi"><h4>Bildirim Gecmisi</h4>
+    ${bildirimler.slice().reverse().map(b=>`<div class="bildirim-gecmisi-item">
+      <div class="bildirim-gecmisi-icon" style="background:${b.tip==='whatsapp'?'#dcfce7':'#e0f2fe'}">
+        ${b.tip==='whatsapp'?'&#128172;':'&#128241;'}
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:600;color:#374151">${b.tip==='whatsapp'?'WhatsApp':'SMS'} <span style="font-weight:400;color:#9ca3af">- ${tamTarih(b.tarih)}</span></div>
+        <div class="bildirim-gecmisi-mesaj">${b.mesaj}</div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function showBildirimToast(servisId,mesaj){
+  const t=document.createElement('div');
+  t.className='bildirim-toast';
+  t.innerHTML=`<span>${mesaj}</span><button class="btn btn-wa btn-s" onclick="bildirimGonder('${servisId}','whatsapp')">&#128172; WhatsApp</button><button class="btn btn-sms btn-s" onclick="bildirimGonder('${servisId}','sms')">&#128241; SMS</button>`;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},6000);
+}
+
+function cizGrafik(canvasId,servisler){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const container=canvas.parentElement;
+  const w=container.clientWidth-40;
+  const h=200;
+  canvas.width=w*dpr;
+  canvas.height=h*dpr;
+  canvas.style.width=w+'px';
+  canvas.style.height=h+'px';
+  ctx.scale(dpr,dpr);
+  const gunIsimleri=['Pzt','Sal','Car','Per','Cum','Cmt','Paz'];
+  const bugun=new Date();
+  const son7gun=[];
+  for(let i=6;i>=0;i--){
+    const t=new Date(bugun);
+    t.setDate(bugun.getDate()-i);
+    t.setHours(0,0,0,0);
+    const gunIndex=(t.getDay()+6)%7;
+    son7gun.push({tarih:t.getTime(),gun:gunIsimleri[gunIndex],sayi:0});
+  }
+  servisler.forEach(s=>{
+    if(!s.tarih)return;
+    const st=new Date(s.tarih);
+    st.setHours(0,0,0,0);
+    const found=son7gun.find(d=>d.tarih===st.getTime());
+    if(found)found.sayi++;
+  });
+  const pad={top:30,right:20,bottom:40,left:20};
+  const cw=w-pad.left-pad.right;
+  const ch=h-pad.top-pad.bottom;
+  const maxVal=Math.max(...son7gun.map(d=>d.sayi),1);
+  const gap=cw/7;
+  const bw=gap*0.55;
+  ctx.clearRect(0,0,w,h);
+  son7gun.forEach((d,i)=>{
+    const x=pad.left+i*gap+(gap-bw)/2;
+    const bh=(d.sayi/maxVal)*ch;
+    const y=pad.top+ch-bh;
+    ctx.fillStyle='#2563eb';
+    ctx.beginPath();
+    if(typeof ctx.roundRect==='function'){
+      ctx.roundRect(x,y,bw,bh,[4,4,0,0]);
+    }else{
+      ctx.rect(x,y,bw,bh);
+    }
+    ctx.fill();
+    ctx.fillStyle='#374151';
+    ctx.font='bold 12px Segoe UI, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(d.sayi,x+bw/2,y-6);
+    ctx.fillStyle='#6b7280';
+    ctx.font='11px Segoe UI, sans-serif';
+    ctx.fillText(d.gun,x+bw/2,h-pad.bottom+16);
+  });
+  ctx.strokeStyle='#e5e7eb';
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(pad.left,pad.top+ch);
+  ctx.lineTo(w-pad.right,pad.top+ch);
+  ctx.stroke();
 }
 
 async function render(){
@@ -171,8 +339,14 @@ function bindLogin(){
 function renderLayout(k){
   const yr=k.rol==='yonetici',ay=k.rol==='alt_yonetici',ku=k.rol==='kullanici';
   const bekleyen=bekleyenIsSayisi();
-  return`<div class="layout">
-  <aside class="side">
+  return`<div class="mob-top" style="display:none">
+    <button class="hamburger" onclick="toggleSide()">&#9776;</button>
+    <span class="mob-title">Servis Yonetim</span>
+    <div class="mob-avatar">${(k.adSoyad||'?')[0]}</div>
+  </div>
+  <div class="side-overlay" id="sideOverlay" onclick="toggleSide()"></div>
+  <div class="layout">
+  <aside class="side" id="sidePanel">
     <div class="side-hd"><h2>Servis Yonetim</h2><p>${rolAd(k.rol)}</p></div>
     <nav class="side-nav">
       <a href="#" data-menu="dashboard" class="${aktifMenu==='dashboard'?'act':''}"><span class="ic">&#127968;</span> Dashboard</a>
@@ -189,9 +363,15 @@ function renderLayout(k){
   </aside>
   <main class="main" id="mainContent"></main></div>`;
 }
+function toggleSide(){
+  const side=document.getElementById('sidePanel');
+  const ov=document.getElementById('sideOverlay');
+  if(side)side.classList.toggle('open');
+  if(ov)ov.classList.toggle('open');
+}
 
 function bindLayout(k){
-  document.querySelectorAll('.side-nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();aktifMenu=a.dataset.menu;modal=null;render();}));
+  document.querySelectorAll('.side-nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();aktifMenu=a.dataset.menu;modal=null;render();const side=document.getElementById('sidePanel');const ov=document.getElementById('sideOverlay');if(side)side.classList.remove('open');if(ov)ov.classList.remove('open');}));
   const mc=document.getElementById('mainContent');
   switch(aktifMenu){
     case'dashboard':renderDashboard(mc,k);break;case'servisler':renderServisler(mc,k);break;
@@ -220,6 +400,7 @@ function renderDashboard(mc,k){
       <div class="sc"><div class="si gr">&#9989;</div><div><h3>${tamam}</h3><p>Tamamlanan</p></div></div>
       ${(yr||ay)?`<div class="sc"><div class="si gn">&#8378;</div><div><h3>${para(gelir)}</h3><p>Gelir</p></div></div>`:''}
     </div>`;
+  html+=`<div class="chart-container"><h3>&#128200; Son 7 Gunluk Servis Sayisi</h3><canvas id="grafikCanvas" class="chart-canvas"></canvas></div>`;
   if(ku&&sonAtanan){
     const m=getMusteri(sonAtanan.musteriId);
     html+=`<div class="card slide-in" style="border-left:4px solid var(--ok)">
@@ -238,6 +419,7 @@ function renderDashboard(mc,k){
     ${son.map(s=>{const m=getMusteri(s.musteriId);return`<tr><td><b>${s.fisNo}</b></td><td>${m?m.adSoyad:'-'}</td><td>${s.urun||'-'} ${s.marka||''} ${s.model||''}</td><td>${s.servisTipi}</td><td>${durumBadge(s.durum)}</td><td>${s.atananKullanici?getKullaniciAd(s.atananKullanici):'-'}</td><td>${para(s.kdvDahilToplam)}</td></tr>`;}).join('')}
     </tbody></table></div>`}</div>`;
   mc.innerHTML=html;
+  cizGrafik('grafikCanvas',sv);
 }
 
 function renderServisler(mc,k){
@@ -250,7 +432,7 @@ function srvAraFiltre(){const k=aktifKullanici;let sv=k.rol==='yonetici'?db.serv
 function srvTabloFull(sv,k){
   if(!sv.length)return'<div class="tc2"><div class="eic">&#128295;</div><p>Servis bulunamadi</p></div>';
   return`<div class="tc"><table><thead><tr><th>Fis No</th><th>Musteri</th><th>Urun</th><th>Servis</th><th>Durum</th><th>Atanan</th><th>Sonuc</th><th>Tutar</th><th>Islem</th></tr></thead><tbody>
-  ${sv.map(s=>{const m=getMusteri(s.musteriId);return`<tr><td><b>${s.fisNo}</b></td><td>${m?m.adSoyad:'-'}</td><td>${s.urun||'-'} ${s.marka||''} ${s.model||''}</td><td>${s.servisTipi}</td><td>${durumBadge(s.durum)}</td><td>${s.atananKullanici?getKullaniciAd(s.atananKullanici):'-'}</td><td>${s.sonuc?'<span class="b b-yz">Yazildi</span>':'<span class="b b-be">Bekliyor</span>'}</td><td>${para(s.kdvDahilToplam)}</td><td><div class="flex g2"><button class="btn btn-i btn-s" onclick="modal='detayServis';modalData='${s.id}';render()">Gor</button><button class="btn btn-ok btn-s" onclick="fisGoster('${s.id}')">Fis</button>${k.rol==='yonetici'?`<button class="btn btn-d btn-s" onclick="servisSil('${s.id}')">Sil</button>`:''}</div></td></tr>`;}).join('')}</tbody></table></div>`;
+  ${sv.map(s=>{const m=getMusteri(s.musteriId); const tel=m?m.telefon:''; return`<tr><td><b>${s.fisNo}</b></td><td>${m?m.adSoyad:'-'}</td><td>${s.urun||'-'} ${s.marka||''} ${s.model||''}</td><td>${s.servisTipi}</td><td>${durumBadge(s.durum)}</td><td>${s.atananKullanici?getKullaniciAd(s.atananKullanici):'-'}</td><td>${s.sonuc?'<span class="b b-yz">Yazildi</span>':'<span class="b b-be">Bekliyor</span>'}</td><td>${para(s.kdvDahilToplam)}</td><td><div class="flex g2" style="flex-wrap:wrap"><button class="btn btn-i btn-s" onclick="modal='detayServis';modalData='${s.id}';render()">Gor</button><button class="btn btn-ok btn-s" onclick="fisGoster('${s.id}')">Fis</button>${tel?`<button class="btn btn-wa btn-s" onclick="bildirimGonder('${s.id}','whatsapp')">&#128172;</button><button class="btn btn-sms btn-s" onclick="bildirimGonder('${s.id}','sms')">&#128241;</button>`:''}${k.rol==='yonetici'?`<button class="btn btn-d btn-s" onclick="servisSil('${s.id}')">Sil</button>`:''}</div></td></tr>`;}).join('')}</tbody></table></div>`;
 }
 async function servisSil(id){if(!confirm('Bu servis kaydi silinsin mi?'))return;await apiFetch('/api/servis/'+id,'DELETE');render();}
 
@@ -295,6 +477,7 @@ function isKartlar(sv){
     if(s.durum==='beklemede')aksiyonlar=`<button class="btn btn-ok btn-s" onclick="durumDegistir('${s.id}','islemde')">Isleme Al</button>${telBtn}`;
     else if(s.durum==='islemde')aksiyonlar=`<button class="btn btn-w btn-s" onclick="durumDegistir('${s.id}','yolda')">Yola Ciktim</button><button class="btn btn-ok btn-s" onclick="durumDegistir('${s.id}','tamamlandi')">Tamamla</button>${telBtn}`;
     else if(s.durum==='yolda')aksiyonlar=`<button class="btn btn-ok btn-s" onclick="durumDegistir('${s.id}','tamamlandi')">Tamamla</button>${telBtn}`;
+    const bildirimBtnlari=tel?`<button class="btn btn-wa btn-s" onclick="event.stopPropagation();bildirimGonder('${s.id}','whatsapp')">&#128172; WhatsApp</button><button class="btn btn-sms btn-s" onclick="event.stopPropagation();bildirimGonder('${s.id}','sms')">&#128241; SMS</button>`:'';
     return`<div class="is-kart"><div class="kart-hd"><div><div class="kart-musteri">${m?m.adSoyad:'Musteri Yok'}</div>
       <div class="kart-bilgi"><b>Fis:</b> ${s.fisNo} &nbsp;&nbsp; ${durumBadge(s.durum)}<br>
       ${tel?`<a href="tel:${tel}" class="btn-tel" style="font-size:11px;padding:3px 8px;margin-bottom:4px;display:inline-flex">&#128222; ${tel}</a><br>`:''}
@@ -304,14 +487,21 @@ function isKartlar(sv){
       <b>Ucret:</b> ${para(s.kdvDahilToplam)}
       ${s.sonuc?`<br><b>Sonuc:</b> ${s.sonuc}`:''}
       </div></div></div>
-      <div class="kart-aksiyon"><button class="btn btn-i btn-s" onclick="modalData='${s.id}';aktifMenu='isDetay';render()">Detay</button>${aksiyonlar}</div></div>`;
+      <div class="kart-aksiyon"><button class="btn btn-i btn-s" onclick="modalData='${s.id}';aktifMenu='isDetay';render()">Detay</button>${aksiyonlar}${bildirimBtnlari}</div></div>`;
   }).join('');
 }
 async function durumDegistir(id,durum){
   const data={durum};
   if(durum==='tamamlandi')data.bitisTarihi=new Date().toISOString();
   if(durum==='islemde')data.baslangicTarihi=new Date().toISOString();
-  await apiFetch('/api/servis/'+id,'PUT',data);render();
+  await apiFetch(`/api/servis/${id}`,'PUT',data);
+  await render();
+  const s=db.servisler.find(x=>x.id===id);
+  if(s){
+    const m=getMusteri(s.musteriId);
+    const mesaj=`${m?m.adSoyad:'Musteri'} musterisiniz ${durumAd(durum)} durumuna gecti. Servis No: ${s.fisNo}`;
+    showBildirimToast(id,mesaj);
+  }
 }
 
 function renderIsDetay(mc,k){
@@ -328,9 +518,13 @@ function renderIsDetay(mc,k){
     ${fotolar.length>0?`<div class="card"><b>Fotograflar</b><div class="foto-grid" style="margin-top:8px">${fotolar.map(f=>`<div class="foto-item"><img src="${f}" onerror="this.style.display='none'"></div>`).join('')}</div></div>`:''}
     ${s.yapilanIslemler&&s.yapilanIslemler.length>0?`<div class="card"><b>Yapilan Islemler</b>${s.yapilanIslemler.map(i=>`<div class="flex jcsb mb2" style="padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px"><span>${i.islem}</span><b>${para(i.tutar)}</b></div>`).join('')}</div>`:''}
     ${s.parcalar&&s.parcalar.length>0?`<div class="card"><b>Parcalar</b>${s.parcalar.map(p=>`<div class="flex jcsb mb2" style="padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px"><span>${p.aciklama} x${p.adet}</span><b>${para(p.toplam)}</b></div>`).join('')}</div>`:''}
-    <div class="card sonuc-alan"><h4>Sonuc Yazin</h4>
+    ${s.sonuc?`<div class="card sonuc-alan"><h4>Sonuc Yazin</h4>
     <div class="fg"><label>Sonuc Notu</label><textarea id="sonucNotu" rows="4" placeholder="Servis sonucunu buraya yazin...">${s.sonuc||''}</textarea></div>
-    <div class="ma"><button class="btn btn-ok" onclick="sonucKaydet('${s.id}')">Kaydet</button></div></div>`;
+    <div class="ma"><button class="btn btn-ok" onclick="sonucKaydet('${s.id}')">Kaydet</button></div></div>`:`<div class="card sonuc-alan"><h4>Sonuc Yazin</h4>
+    <div class="fg"><label>Sonuc Notu</label><textarea id="sonucNotu" rows="4" placeholder="Servis sonucunu buraya yazin...">${s.sonuc||''}</textarea></div>
+    <div class="ma"><button class="btn btn-ok" onclick="sonucKaydet('${s.id}')">Kaydet</button></div></div>`}
+    ${bildirimGecmisiHtml(s)}
+    <div class="card" style="margin-top:12px"><div class="ma">${m&&m.telefon?`<button class="btn btn-wa btn-s" onclick="bildirimGonder('${s.id}','whatsapp')">&#128172; WhatsApp</button><button class="btn btn-sms btn-s" onclick="bildirimGonder('${s.id}','sms')">&#128241; SMS</button>`:''}<button class="btn btn-ok btn-s" onclick="fisGoster('${s.id}')">Fis</button><button class="btn btn-g btn-s" onclick="aktifMenu='islerim';render()">Geri</button></div></div>`;
 }
 async function sonucKaydet(id){
   const sonuc=g('sonucNotu');if(!sonuc.trim()){alert('Sonuc notu gerekli');return;}
@@ -656,7 +850,8 @@ function mDetay(){
     <div style="background:#f9fafb;padding:12px;border-radius:8px;margin-bottom:10px"><div class="flex jcsb"><b>Toplam (KDV Dahil):</b><b style="color:var(--p);font-size:16px">${para(s.kdvDahilToplam)}</b></div></div>
     ${(s.fotolar&&s.fotolar.length>0)?`<div class="card"><b>Fotograflar</b><div class="foto-grid" style="margin-top:8px">${s.fotolar.map(f=>`<div class="foto-item"><img src="${f}" onerror="this.style.display='none'"></div>`).join('')}</div></div>`:''}
     ${s.sonuc?`<div class="sonuc-alan"><h4>Sonuc</h4><p style="white-space:pre-wrap;font-size:13px">${s.sonuc}</p></div>`:''}
-    <div class="ma"><button class="btn btn-ok btn-s" onclick="fisGoster('${s.id}')">Fis</button><button class="btn btn-g btn-s" onclick="modal=null;render()">Kapat</button></div>`;
+    ${bildirimGecmisiHtml(s)}
+    <div class="ma">${m&&m.telefon?`<button class="btn btn-wa btn-s" onclick="bildirimGonder('${s.id}','whatsapp')">&#128172; WhatsApp</button><button class="btn btn-sms btn-s" onclick="bildirimGonder('${s.id}','sms')">&#128241; SMS</button>`:''}<button class="btn btn-ok btn-s" onclick="fisGoster('${s.id}')">Fis</button><button class="btn btn-g btn-s" onclick="modal=null;render()">Kapat</button></div>`;
 }
 
 render();
