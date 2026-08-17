@@ -212,7 +212,7 @@ function renderDashboard(mc,k){
   const son=sv.slice(-5).reverse();
   const sonAtanan=sonAtananServis();
   let html=`<div class="ph"><h1>Merhaba, ${k.adSoyad}</h1>
-    ${(yr||ay)?`<button class="yeni-is-btn" onclick="modal='yeniServis';render()">+ Yeni Is Kaydi</button>`:''}</div>`;
+    ${(yr||ay)?`<button class="yeni-is-btn" onclick="servisForm=null;modal='yeniServis';render()">+ Yeni Is Kaydi</button>`:''}</div>`;
   html+=`<div class="sg">
       <div class="sc"><div class="si bl">&#128295;</div><div><h3>${toplam}</h3><p>Toplam Servis</p></div></div>
       <div class="sc"><div class="si yl">&#9203;</div><div><h3>${bekleyen}</h3><p>Bekleyen</p></div></div>
@@ -242,7 +242,7 @@ function renderDashboard(mc,k){
 
 function renderServisler(mc,k){
   let sv=k.rol==='yonetici'?db.servisler:db.servisler.filter(s=>s.ekleyen===k.id);
-  mc.innerHTML=`<div class="ph"><h1>Servis Kayitlari</h1><button class="yeni-is-btn" onclick="modal='yeniServis';render()">+ Yeni Is Kaydi</button></div>
+  mc.innerHTML=`<div class="ph"><h1>Servis Kayitlari</h1><button class="yeni-is-btn" onclick="servisForm=null;modal='yeniServis';render()">+ Yeni Is Kaydi</button></div>
     <div class="card"><div class="sb"><input type="text" id="srvAra" placeholder="Ara..." oninput="srvAraFiltre()"><select id="srvDurum" onchange="srvAraFiltre()"><option value="">Tum Durumlar</option><option value="beklemede">Beklemede</option><option value="islemde">Islemde</option><option value="yolda">Yolda</option><option value="tamamlandi">Tamamlandi</option><option value="iptal">Iptal</option></select></div>
     <div id="srvTablo">${srvTabloFull(sv.slice().reverse(),k)}</div></div>`;
 }
@@ -256,7 +256,7 @@ async function servisSil(id){if(!confirm('Bu servis kaydi silinsin mi?'))return;
 
 function renderMusteriler(mc,k){
   let ml=k.rol==='yonetici'?db.musteriler:db.musteriler.filter(m=>m.ekleyen===k.id);
-  mc.innerHTML=`<div class="ph"><h1>Musteriler</h1><button class="yeni-is-btn" onclick="modal='yeniMusteri';render()">+ Yeni Musteri</button></div>
+  mc.innerHTML=`<div class="ph"><h1>Musteriler</h1><button class="yeni-is-btn" onclick="modal='yeniMusteri';modalData=null;render()">+ Yeni Musteri</button></div>
     <div class="card"><div class="sb"><input type="text" id="musAra" placeholder="Ara..." oninput="musAraFiltre()"></div>
     <div id="musTablo">${musTablo(ml)}</div></div>`;
 }
