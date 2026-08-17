@@ -226,6 +226,7 @@ function renderDashboard(mc,k){
       <div class="flex jcsb aic mb2"><h3 style="font-size:14px;color:var(--ok)">&#128276; Son Atanan Is</h3>${durumBadge(sonAtanan.durum)}</div>
       <div style="font-size:14px;font-weight:700;margin-bottom:4px">${sonAtanan.fisNo} - ${m?m.adSoyad:'Musteri'}</div>
       <div style="font-size:12px;color:#6b7280;line-height:1.8">
+        <b>Urun:</b> ${sonAtanan.urun||'-'} ${sonAtanan.marka||''} ${sonAtanan.model||''}<br>
         <b>Servis:</b> ${sonAtanan.servisTipi} &nbsp; <b>Ucret:</b> ${para(sonAtanan.kdvDahilToplam)}
       </div>
       <div style="margin-top:8px"><button class="btn btn-i btn-s" onclick="modalData='${sonAtanan.id}';aktifMenu='isDetay';render()">Detaya Git</button></div>
@@ -233,8 +234,8 @@ function renderDashboard(mc,k){
   }
   html+=`<div class="card"><div class="flex jcsb aic mb4"><h3 style="font-size:16px">Son Servisler</h3></div>
     ${son.length===0?'<div class="tc2"><div class="eic">&#128295;</div><p>Henuz servis yok</p></div>'
-    :`<div class="tc"><table><thead><tr><th>Fis No</th><th>Musteri</th><th>Servis</th><th>Durum</th><th>Atanan</th><th>Tutar</th></tr></thead><tbody>
-    ${son.map(s=>{const m=getMusteri(s.musteriId);return`<tr><td><b>${s.fisNo}</b></td><td>${m?m.adSoyad:'-'}</td><td>${s.servisTipi}</td><td>${durumBadge(s.durum)}</td><td>${s.atananKullanici?getKullaniciAd(s.atananKullanici):'-'}</td><td>${para(s.kdvDahilToplam)}</td></tr>`;}).join('')}
+    :`<div class="tc"><table><thead><tr><th>Fis No</th><th>Musteri</th><th>Urun</th><th>Servis</th><th>Durum</th><th>Atanan</th><th>Tutar</th></tr></thead><tbody>
+    ${son.map(s=>{const m=getMusteri(s.musteriId);return`<tr><td><b>${s.fisNo}</b></td><td>${m?m.adSoyad:'-'}</td><td>${s.urun||'-'} ${s.marka||''} ${s.model||''}</td><td>${s.servisTipi}</td><td>${durumBadge(s.durum)}</td><td>${s.atananKullanici?getKullaniciAd(s.atananKullanici):'-'}</td><td>${para(s.kdvDahilToplam)}</td></tr>`;}).join('')}
     </tbody></table></div>`}</div>`;
   mc.innerHTML=html;
 }
@@ -248,8 +249,8 @@ function renderServisler(mc,k){
 function srvAraFiltre(){const k=aktifKullanici;let sv=k.rol==='yonetici'?db.servisler:db.servisler.filter(s=>s.ekleyen===k.id);const a=(g('srvAra')||'').toLowerCase(),d=g('srvDurum');if(d)sv=sv.filter(s=>s.durum===d);if(a)sv=sv.filter(s=>{const m=getMusteri(s.musteriId);return s.fisNo.toLowerCase().includes(a)||s.servisTipi.toLowerCase().includes(a)||(m&&m.adSoyad.toLowerCase().includes(a));});document.getElementById('srvTablo').innerHTML=srvTabloFull(sv.slice().reverse(),k);}
 function srvTabloFull(sv,k){
   if(!sv.length)return'<div class="tc2"><div class="eic">&#128295;</div><p>Servis bulunamadi</p></div>';
-  return`<div class="tc"><table><thead><tr><th>Fis No</th><th>Musteri</th><th>Plaka</th><th>Servis</th><th>Durum</th><th>Atanan</th><th>Sonuc</th><th>Tutar</th><th>Islem</th></tr></thead><tbody>
-  ${sv.map(s=>{const m=getMusteri(s.musteriId);return`<tr><td><b>${s.fisNo}</b></td><td>${m?m.adSoyad:'-'}</td><td>${m?m.plaka||'-':'-'}</td><td>${s.servisTipi}</td><td>${durumBadge(s.durum)}</td><td>${s.atananKullanici?getKullaniciAd(s.atananKullanici):'-'}</td><td>${s.sonuc?'<span class="b b-yz">Yazildi</span>':'<span class="b b-be">Bekliyor</span>'}</td><td>${para(s.kdvDahilToplam)}</td><td><div class="flex g2"><button class="btn btn-i btn-s" onclick="modal='detayServis';modalData='${s.id}';render()">Gor</button><button class="btn btn-ok btn-s" onclick="fisGoster('${s.id}')">Fis</button>${k.rol==='yonetici'?`<button class="btn btn-d btn-s" onclick="servisSil('${s.id}')">Sil</button>`:''}</div></td></tr>`;}).join('')}</tbody></table></div>`;
+  return`<div class="tc"><table><thead><tr><th>Fis No</th><th>Musteri</th><th>Urun</th><th>Servis</th><th>Durum</th><th>Atanan</th><th>Sonuc</th><th>Tutar</th><th>Islem</th></tr></thead><tbody>
+  ${sv.map(s=>{const m=getMusteri(s.musteriId);return`<tr><td><b>${s.fisNo}</b></td><td>${m?m.adSoyad:'-'}</td><td>${s.urun||'-'} ${s.marka||''} ${s.model||''}</td><td>${s.servisTipi}</td><td>${durumBadge(s.durum)}</td><td>${s.atananKullanici?getKullaniciAd(s.atananKullanici):'-'}</td><td>${s.sonuc?'<span class="b b-yz">Yazildi</span>':'<span class="b b-be">Bekliyor</span>'}</td><td>${para(s.kdvDahilToplam)}</td><td><div class="flex g2"><button class="btn btn-i btn-s" onclick="modal='detayServis';modalData='${s.id}';render()">Gor</button><button class="btn btn-ok btn-s" onclick="fisGoster('${s.id}')">Fis</button>${k.rol==='yonetici'?`<button class="btn btn-d btn-s" onclick="servisSil('${s.id}')">Sil</button>`:''}</div></td></tr>`;}).join('')}</tbody></table></div>`;
 }
 async function servisSil(id){if(!confirm('Bu servis kaydi silinsin mi?'))return;await apiFetch('/api/servis/'+id,'DELETE');render();}
 
@@ -259,11 +260,11 @@ function renderMusteriler(mc,k){
     <div class="card"><div class="sb"><input type="text" id="musAra" placeholder="Ara..." oninput="musAraFiltre()"></div>
     <div id="musTablo">${musTablo(ml)}</div></div>`;
 }
-function musAraFiltre(){const k=aktifKullanici;let ml=k.rol==='yonetici'?db.musteriler:db.musteriler.filter(m=>m.ekleyen===k.id);const a=(g('musAra')||'').toLowerCase();if(a)ml=ml.filter(m=>(m.adSoyad+m.telefon+m.plaka).toLowerCase().includes(a));document.getElementById('musTablo').innerHTML=musTablo(ml);}
+function musAraFiltre(){const k=aktifKullanici;let ml=k.rol==='yonetici'?db.musteriler:db.musteriler.filter(m=>m.ekleyen===k.id);const a=(g('musAra')||'').toLowerCase();if(a)ml=ml.filter(m=>(m.adSoyad+m.telefon+m.urun+m.marka).toLowerCase().includes(a));document.getElementById('musTablo').innerHTML=musTablo(ml);}
 function musTablo(ml){
   if(!ml.length)return'<div class="tc2"><div class="eic">&#128100;</div><p>Musteri yok</p></div>';
-  return`<div class="tc"><table><thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Plaka</th><th>Arac</th><th>Islem</th></tr></thead><tbody>
-  ${ml.map(m=>`<tr><td><b>${m.adSoyad}</b></td><td>${m.telefon}${m.telefon?` <a href="tel:${m.telefon}" class="btn-tel" style="font-size:10px;padding:2px 6px">&#128222;</a>`:''}</td><td>${m.plaka||'-'}</td><td>${m.aracMarka||''} ${m.aracModel||''}</td><td><div class="flex g2"><button class="btn btn-i btn-s" onclick="modal='duzeltMusteri';modalData='${m.id}';render()">Duz</button><button class="btn btn-d btn-s" onclick="musteriSil('${m.id}')">Sil</button></div></td></tr>`).join('')}</tbody></table></div>`;
+  return`<div class="tc"><table><thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Urun</th><th>Marka</th><th>Islem</th></tr></thead><tbody>
+  ${ml.map(m=>`<tr><td><b>${m.adSoyad}</b></td><td>${m.telefon}${m.telefon?` <a href="tel:${m.telefon}" class="btn-tel" style="font-size:10px;padding:2px 6px">&#128222;</a>`:''}</td><td>${m.urun||'-'}</td><td>${m.marka||'-'}</td><td><div class="flex g2"><button class="btn btn-i btn-s" onclick="modal='duzeltMusteri';modalData='${m.id}';render()">Duz</button><button class="btn btn-d btn-s" onclick="musteriSil('${m.id}')">Sil</button></div></td></tr>`).join('')}</tbody></table></div>`;
 }
 async function musteriSil(id){if(!confirm('Silinsin mi?'))return;await apiFetch('/api/musteri/'+id,'DELETE');render();}
 
@@ -296,9 +297,10 @@ function isKartlar(sv){
     else if(s.durum==='yolda')aksiyonlar=`<button class="btn btn-ok btn-s" onclick="durumDegistir('${s.id}','tamamlandi')">Tamamla</button>${telBtn}`;
     return`<div class="is-kart"><div class="kart-hd"><div><div class="kart-musteri">${m?m.adSoyad:'Musteri Yok'}</div>
       <div class="kart-bilgi"><b>Fis:</b> ${s.fisNo} &nbsp;&nbsp; ${durumBadge(s.durum)}<br>
-      <b>Plaka:</b> ${m?m.plaka||'-':'-'} &nbsp; <b>Arac:</b> ${m?(m.aracMarka||'')+' '+(m.aracModel||''):'-'}<br>
+      ${tel?`<a href="tel:${tel}" class="btn-tel" style="font-size:11px;padding:3px 8px;margin-bottom:4px;display:inline-flex">&#128222; ${tel}</a><br>`:''}
+      <b>Urun:</b> ${s.urun||'-'} &nbsp; <b>Marka:</b> ${s.marka||'-'} &nbsp; <b>Model:</b> ${s.model||'-'}<br>
+      <b>Sikayet:</b> ${s.arizaSikayeti||s.aciklama||'-'}<br>
       <b>Servis:</b> ${s.servisTipi}<br>
-      ${s.aciklama?`<b>Aciklama:</b> ${s.aciklama}<br>`:''}
       <b>Ucret:</b> ${para(s.kdvDahilToplam)}
       ${s.sonuc?`<br><b>Sonuc:</b> ${s.sonuc}`:''}
       </div></div></div>
@@ -319,10 +321,9 @@ function renderIsDetay(mc,k){
   mc.innerHTML=`<div class="ph"><h1>Is Detayı - ${s.fisNo}</h1>
     <button class="btn btn-g btn-s" onclick="aktifMenu='islerim';render()">Geri</button></div>
     <div class="card"><div class="fr mb4"><div><b>Musteri:</b> ${m?m.adSoyad:'-'}</div><div><b>Telefon:</b> ${m?m.telefon:'-'}${m&&m.telefon?` <a href="tel:${m.telefon}" class="btn-tel" style="font-size:10px;padding:2px 6px">&#128222;</a>`:''}</div></div>
-    <div class="fr mb4"><div><b>Plaka:</b> ${m?m.plaka||'-':'-'}</div><div><b>Arac:</b> ${m?(m.aracMarka||'')+' '+(m.aracModel||''):'-'}</div></div>
-    <div class="fr mb4"><div><b>Urun Grubu:</b> ${s.urunGrubu||'-'}</div><div><b>Urun:</b> ${s.urunMarkasi||''} ${s.urunModeli||''}</div></div>
-    <div class="fr"><div><b>Adres:</b> ${m?m.adres||'-':'-'}</div><div><b>Servis:</b> ${s.servisTipi}</div></div>
-    <div class="fr"><div><b>Ariza Sikayeti:</b> ${s.arizaSikayeti||s.aciklama||'-'}</div><div><b>Ucret:</b> ${para(s.kdvDahilToplam)}</div></div>
+    <div class="fr mb4"><div><b>Adres:</b> ${m?m.adres||'-':'-'}</div><div><b>Servis Tipi:</b> ${s.servisTipi}</div></div>
+    <div class="fr mb4"><div><b>Urun:</b> ${s.urun||'-'}</div><div><b>Marka:</b> ${s.marka||'-'} &nbsp; <b>Model:</b> ${s.model||'-'}</div></div>
+    <div class="fr mb4"><div><b>Sikayet:</b> ${s.arizaSikayeti||s.aciklama||'-'}</div><div><b>Ucret:</b> ${para(s.kdvDahilToplam)}</div></div>
     ${s.notlar?`<div style="margin-top:8px"><b>Notlar:</b> ${s.notlar}</div>`:''}</div>
     ${fotolar.length>0?`<div class="card"><b>Fotograflar</b><div class="foto-grid" style="margin-top:8px">${fotolar.map(f=>`<div class="foto-item"><img src="${f}" onerror="this.style.display='none'"></div>`).join('')}</div></div>`:''}
     ${s.yapilanIslemler&&s.yapilanIslemler.length>0?`<div class="card"><b>Yapilan Islemler</b>${s.yapilanIslemler.map(i=>`<div class="flex jcsb mb2" style="padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px"><span>${i.islem}</span><b>${para(i.tutar)}</b></div>`).join('')}</div>`:''}
@@ -384,7 +385,6 @@ async function profilKaydet(e){
 function fisGoster(id){
   const s=db.servisler.find(x=>x.id===id);if(!s)return;const m=getMusteri(s.musteriId);
   const yazan=s.sonucYazan?getKullaniciAd(s.sonucYazan):null;
-  const urunBilgi=s.urunGrubu||m?.sikayet?'':'-';
   const w=window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><title>Fis ${s.fisNo}</title><style>
     body{font-family:"Courier New",monospace;margin:20px;font-size:12px;line-height:1.5;color:#1f2937}
@@ -399,7 +399,7 @@ function fisGoster(id){
   </style></head><body>
     <div class="hdr">
       <h2>SERVIS YONETIM SISTEMI</h2>
-      <p>Profesyonel Servis ve Bakim Hizmetleri</p>
+      <p>Beyaz Esya Servis ve Bakim Hizmetleri</p>
       <p style="font-size:10px">Tel: (0XXX) XXX XX XX | info@servisyonetim.com</p>
     </div>
     <div class="r"><span>Fis No:</span><b>${s.fisNo}</b></div>
@@ -411,13 +411,11 @@ function fisGoster(id){
     <div class="r"><span>Ad Soyad:</span><span>${m?m.adSoyad:'-'}</span></div>
     <div class="r"><span>Telefon:</span><span>${m?m.telefon:'-'}</span></div>
     <div class="r"><span>Adres:</span><span>${m?m.adres||'-':'-'}</span></div>
-    <div class="r"><span>Plaka:</span><span>${m?m.plaka||'-':'-'}</span></div>
-    <div class="r"><span>Arac:</span><span>${m?(m.aracMarka||'')+' '+(m.aracModel||''):'-'}</span></div>
     <div class="d"></div>
     <div class="section-title">URUN / ARIZA BILGILERI</div>
-    <div class="r"><span>Urun Grubu:</span><span>${s.urunGrubu||'-'}</span></div>
-    <div class="r"><span>Urun Markasi:</span><span>${s.urunMarkasi||'-'}</span></div>
-    <div class="r"><span>Urun Modeli:</span><span>${s.urunModeli||'-'}</span></div>
+    <div class="r"><span>Urun:</span><span>${s.urun||'-'}</span></div>
+    <div class="r"><span>Marka:</span><span>${s.marka||'-'}</span></div>
+    <div class="r"><span>Model:</span><span>${s.model||'-'}</span></div>
     ${s.arizaSikayeti?`<div style="margin:4px 0"><b>Ariza / Sikayet:</b><br><span style="white-space:pre-wrap">${s.arizaSikayeti}</span></div>`:''}
     ${s.aciklama?`<div style="margin:4px 0"><b>Aciklama:</b><br><span style="white-space:pre-wrap">${s.aciklama}</span></div>`:''}
     ${s.yapilanIslemler&&s.yapilanIslemler.length>0?`<div class="d"></div><div class="section-title">YAPILAN ISLEMLER</div>${s.yapilanIslemler.map(i=>`<div class="r"><span>${i.islem}</span><span>${para(i.tutar)}</span></div>`).join('')}`:''}
@@ -469,65 +467,77 @@ async function kullaniciEkle(e){
 }
 
 function mMusteri(){
-  const duzelt=modal==='duzeltMusteri';let m={adSoyad:'',telefon:'',plaka:'',aracMarka:'',aracModel:'',adres:'',sikayet:''};
+  const duzelt=modal==='duzeltMusteri';let m={adSoyad:'',telefon:'',adres:'',urun:'',marka:'',model:'',sikayet:''};
   if(duzelt)m=db.musteriler.find(x=>x.id===modalData)||m;
   return`<h2>${duzelt?'Musteri Duzenle':'Yeni Musteri'}</h2><form onsubmit="musteriKaydet(event,${duzelt},'${duzelt?modalData:''}')">
-    <div class="fr"><div class="fg"><label>Ad Soyad *</label><input type="text" id="mAd" value="${m.adSoyad}" required></div>
-    <div class="fg"><label>Telefon *</label><input type="tel" id="mTel" value="${m.telefon}" required></div></div>
-    <div class="fr"><div class="fg"><label>Plaka</label><input type="text" id="mPlaka" value="${m.plaka||''}" style="text-transform:uppercase"></div>
-    <div class="fg"><label>Arac Marka</label><input type="text" id="mMarka" value="${m.aracMarka||''}"></div></div>
-    <div class="fr"><div class="fg"><label>Arac Model</label><input type="text" id="mModel" value="${m.aracModel||''}"></div>
-    <div class="fg"><label>Adres</label><input type="text" id="mAdres" value="${m.adres||''}"></div></div>
-    <div class="fg"><label>Sikayet</label><textarea id="mSikayet" rows="2">${m.sikayet||''}</textarea></div>
+    <div class="fg"><label>Ad Soyad *</label><input type="text" id="mAd" value="${m.adSoyad}" required></div>
+    <div class="fr"><div class="fg"><label>Telefon *</label><input type="tel" id="mTel" value="${m.telefon}" required></div>
+    <div class="fg"><label>Adres *</label><input type="text" id="mAdres" value="${m.adres||''}" required></div></div>
+    <div class="fr"><div class="fg"><label>Urun</label><select id="mUrun"><option value="">Secin...</option>
+      <option value="Buzdolabi"${m.urun==='Buzdolabi'?' selected':''}>Buzdolabi</option>
+      <option value="Camasir Makinesi"${m.urun==='Camasir Makinesi'?' selected':''}>Camasir Makinesi</option>
+      <option value="Bulasik Makinesi"${m.urun==='Bulasik Makinesi'?' selected':''}>Bulasik Makinesi</option>
+      <option value="Kombi"${m.urun==='Kombi'?' selected':''}>Kombi</option>
+      <option value="Klima"${m.urun==='Klima'?' selected':''}>Klima</option>
+      <option value="Firin"${m.urun==='Firin'?' selected':''}>Firin</option>
+      <option value="Ankastre"${m.urun==='Ankastre'?' selected':''}>Ankastre</option>
+      <option value="Diger"${m.urun==='Diger'?' selected':''}>Diger</option>
+    </select></div>
+    <div class="fg"><label>Marka</label><input type="text" id="mMarka" value="${m.marka||''}" placeholder="Samsung, Bosch..."></div></div>
+    <div class="fg"><label>Model</label><input type="text" id="mModel" value="${m.model||''}"></div>
+    <div class="fg"><label>Sikayet / Aciklama</label><textarea id="mSikayet" rows="2">${m.sikayet||''}</textarea></div>
     <div class="ma"><button type="button" class="btn btn-g btn-s" onclick="modal=null;render()">Iptal</button><button type="submit" class="btn btn-ok btn-s">${duzelt?'Guncelle':'Kaydet'}</button></div></form>`;
 }
 async function musteriKaydet(e,duzelt,id){
-  e.preventDefault();const data={adSoyad:g('mAd'),telefon:g('mTel'),plaka:g('mPlaka').toUpperCase(),aracMarka:g('mMarka'),aracModel:g('mModel'),adres:g('mAdres'),sikayet:g('mSikayet')};
+  e.preventDefault();const data={adSoyad:g('mAd'),telefon:g('mTel'),adres:g('mAdres'),urun:g('mUrun'),marka:g('mMarka'),model:g('mModel'),sikayet:g('mSikayet')};
   if(duzelt){await apiFetch('/api/musteri/'+id,'PUT',data);}
   else{data.ekleyen=aktifKullanici.id;await apiFetch('/api/musteri','POST',data);}
   modal=null;render();
 }
 
 function mServis(){
-  const kk=db.kullanicilar.filter(x=>x.aktif&&x.rol==='kullanici');
+  const kk=db.kullanicilar.filter(x=>x.rol==='kullanici');
+  const musteriListesi=db.musteriler;
   if(!servisForm)servisForm={
-    musteriAdSoyad:'',musteriTelefon:'',musteriAdres:'',musteriPlaka:'',musteriAracMarka:'',musteriAracModel:'',
-    urunGrubu:'',urunMarkasi:'',urunModeli:'',arizaSikayeti:'',
+    musteriSecimId:'',
+    urun:'',marka:'',model:'',arizaSikayeti:'',
     servisTipi:'',atananKullanici:'',ucret:0,
     yapilanIslemler:[],parcalar:[],notlar:'',fotolar:[]
   };
   const f=servisForm;
-  const urunGruplari=['Elektronik','Beyaz Esya','Kombi/Klima','Telefon/Tablet','Bilgisayar','Araba/Arac','Diger'];
+  const urunler=['Buzdolabi','Camasir Makinesi','Bulasik Makinesi','Kombi','Klima','Firin','Ankastre','Diger'];
+  const servisTipleri=['BAKIM','ONARIM','MONTAJ','DEMONTAJ','DIGER'];
   return`<h2>Yeni Is Kaydi</h2>
     <form onsubmit="servisKaydet(event)">
       <div class="form-bolum">
-        <h3><span>&#128100;</span> Musteri Bilgileri</h3>
+        <h3><span>&#128100;</span> Musteri Secimi</h3>
+        <div class="fg"><label>Musteri *</label><select id="sMusteriSecim" required onchange="musteriSecildi()">
+          <option value="">Musteri secin...</option>
+          ${musteriListesi.map(m=>`<option value="${m.id}"${f.musteriSecimId===m.id?' selected':''}>${m.adSoyad} - ${m.telefon}</option>`).join('')}
+        </select></div>
+      </div>
+      <div class="form-bolum">
+        <h3><span>&#128268;</span> Urun Bilgileri</h3>
+        <div class="fg"><label>Urun *</label><select id="sUrun" required>
+          <option value="">Secin...</option>
+          ${urunler.map(u=>`<option value="${u}"${f.urun===u?' selected':''}>${u}</option>`).join('')}
+        </select></div>
         <div class="fr">
-          <div class="fg"><label>Ad Soyad *</label><input type="text" id="sMusteriAd" value="${f.musteriAdSoyad}" required placeholder="Musteri adi soyadi"></div>
-          <div class="fg"><label>Telefon *</label><input type="tel" id="sMusteriTel" value="${f.musteriTelefon}" required placeholder="05XX XXX XX XX" maxlength="11"></div>
-        </div>
-        <div class="fg"><label>Adres *</label><input type="text" id="sMusteriAdres" value="${f.musteriAdres}" required placeholder="Musteri adresi"></div>
-        <div class="fr">
-          <div class="fg"><label>Plaka</label><input type="text" id="sMusteriPlaka" value="${f.musteriPlaka}" placeholder="34 ABC 123" style="text-transform:uppercase"></div>
-          <div class="fg"><label>Arac Marka / Model</label><input type="text" id="sMusteriArac" value="${f.musteriAracMarka?(f.musteriAracMarka+' '+f.musteriAracModel):''}" placeholder="Toyota Corolla"></div>
+          <div class="fg"><label>Marka</label><input type="text" id="sMarka" value="${f.marka}" placeholder="Samsung, Bosch..."></div>
+          <div class="fg"><label>Model</label><input type="text" id="sModel" value="${f.model}" placeholder="Model bilgisi"></div>
         </div>
       </div>
       <div class="form-bolum">
-        <h3><span>&#128268;</span> Urun / Ariza Bilgisi</h3>
-        <div class="fg"><label>Urun Grubu *</label><select id="sUrunGrubu" required>
-          <option value="">Secin...</option>
-          ${urunGruplari.map(u=>`<option value="${u}"${f.urunGrubu===u?' selected':''}>${u}</option>`).join('')}
-        </select></div>
-        <div class="fr">
-          <div class="fg"><label>Urun Markasi</label><input type="text" id="sUrunMarka" value="${f.urunMarkasi}" placeholder="Samsung, Bosch..."></div>
-          <div class="fg"><label>Urun Modeli</label><input type="text" id="sUrunModel" value="${f.urunModeli}" placeholder="Model bilgisi"></div>
-        </div>
-        <div class="fg"><label>Ariza / Sikayet *</label><textarea id="sAriza" rows="3" required placeholder="Musterinin sikayeti, ariza detayi...">${f.arizaSikayeti}</textarea></div>
+        <h3><span>&#128196;</span> Ariza Sikayeti</h3>
+        <div class="fg"><label>Ariza Sikayeti *</label><textarea id="sAriza" rows="3" required placeholder="Musterinin sikayeti, ariza detayi...">${f.arizaSikayeti}</textarea></div>
       </div>
       <div class="form-bolum">
         <h3><span>&#128295;</span> Servis Bilgileri</h3>
         <div class="fr">
-          <div class="fg"><label>Servis Tipi *</label><input type="text" id="sTip" required value="${f.servisTipi}" placeholder="Bakim, Tamirat..."></div>
+          <div class="fg"><label>Servis Tipi *</label><select id="sTip" required>
+            <option value="">Secin...</option>
+            ${servisTipleri.map(t=>`<option value="${t}"${f.servisTipi===t?' selected':''}>${t}</option>`).join('')}
+          </select></div>
           <div class="fg"><label>Sorumlu Kullanici *</label><select id="sAta" required>
             <option value="">Secin...</option>
             ${kk.map(k=>`<option value="${k.id}"${f.atananKullanici===k.id?' selected':''}>${k.adSoyad} (${k.telefon})</option>`).join('')}
@@ -555,6 +565,11 @@ function mServis(){
     </form>`;
 }
 
+function musteriSecildi(){
+  const mid=g('sMusteriSecim');
+  if(servisForm)servisForm.musteriSecimId=mid;
+}
+
 function fotoYukle(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
@@ -567,42 +582,28 @@ function fotoYukle(e){
   reader.readAsDataURL(file);
 }
 
-function mIslem(){return`<h2>Islem Ekle</h2><div class="fg"><label>Aciklama *</label><input type="text" id="iIslem" placeholder="Yag Degisimi"></div><div class="fg"><label>Tutar (TL) *</label><input type="number" id="iTutar" min="0"></div><div class="ma"><button class="btn btn-g btn-s" onclick="modal='yeniServis';render()">Geri</button><button class="btn btn-ok btn-s" onclick="islemEkle()">Ekle</button></div>`;}
+function mIslem(){return`<h2>Islem Ekle</h2><div class="fg"><label>Aciklama *</label><input type="text" id="iIslem" placeholder="Islem aciklamasi"></div><div class="fg"><label>Tutar (TL) *</label><input type="number" id="iTutar" min="0"></div><div class="ma"><button class="btn btn-g btn-s" onclick="modal='yeniServis';render()">Geri</button><button class="btn btn-ok btn-s" onclick="islemEkle()">Ekle</button></div>`;}
 function islemEkle(){const i=g('iIslem'),t=Number(g('iTutar'))||0;if(!i){alert('Gerekli');return;}servisForm.yapilanIslemler.push({islem:i,tutar:t});modal='yeniServis';render();}
 
-function mParca(){return`<h2>Parca Ekle</h2><div class="fg"><label>Parca *</label><input type="text" id="pAck" placeholder="Yag Filtrasi"></div><div class="fr"><div class="fg"><label>Adet *</label><input type="number" id="pAdet" value="1" min="1"></div><div class="fg"><label>Birim Fiyat *</label><input type="number" id="pFiyat" min="0"></div></div><div class="ma"><button class="btn btn-g btn-s" onclick="modal='yeniServis';render()">Geri</button><button class="btn btn-ok btn-s" onclick="parcaEkle()">Ekle</button></div>`;}
+function mParca(){return`<h2>Parca Ekle</h2><div class="fg"><label>Parca *</label><input type="text" id="pAck" placeholder="Parca aciklamasi"></div><div class="fr"><div class="fg"><label>Adet *</label><input type="number" id="pAdet" value="1" min="1"></div><div class="fg"><label>Birim Fiyat *</label><input type="number" id="pFiyat" min="0"></div></div><div class="ma"><button class="btn btn-g btn-s" onclick="modal='yeniServis';render()">Geri</button><button class="btn btn-ok btn-s" onclick="parcaEkle()">Ekle</button></div>`;}
 function parcaEkle(){const a=g('pAck'),ad=Number(g('pAdet'))||1,bf=Number(g('pFiyat'))||0;if(!a){alert('Gerekli');return;}servisForm.parcalar.push({adet:ad,birimFiyat:bf,toplam:ad*bf,aciklama:a});modal='yeniServis';render();}
 
 async function servisKaydet(e){
   e.preventDefault();
-  const musteriAdSoyad=g('sMusteriAd').trim(),musteriTelefon=g('sMusteriTel').trim(),musteriAdres=g('sMusteriAdres').trim();
-  const musteriPlaka=(g('sMusteriPlaka')||'').trim().toUpperCase();
-  const musteriAracStr=(g('sMusteriArac')||'').trim();
+  const musteriSecimId=g('sMusteriSecim');
   const servisTipi=g('sTip'),atananKullanici=g('sAta'),ucret=Number(g('sUcret'))||0;
-  const urunGrubu=g('sUrunGrubu'),urunMarkasi=g('sUrunMarka'),urunModeli=g('sUrunModel');
+  const urun=g('sUrun'),marka=g('sMarka'),model=g('sModel');
   const arizaSikayeti=g('sAriza'),notlar=g('sNot')||'';
 
-  if(!musteriAdSoyad||!musteriTelefon||!musteriAdres){alert('Musteri Ad, Telefon ve Adres zorunlu');return;}
-  if(!urunGrubu){alert('Urun grubu seciniz');return;}
+  if(!musteriSecimId){alert('Musteri seciniz');return;}
+  if(!urun){alert('Urun seciniz');return;}
   if(!arizaSikayeti.trim()){alert('Ariza sikayet alanini doldurun');return;}
   if(!servisTipi){alert('Servis tipi zorunlu');return;}
   if(!atananKullanici){alert('Sorumlu kullanici seciniz');return;}
 
-  const aracParts=musteriAracStr.split(/\s+/);
-  const aracMarka=aracParts[0]||'';
-  const aracModel=aracParts.slice(1).join(' ')||'';
-
-  const musteriData={
-    adSoyad:musteriAdSoyad,telefon:musteriTelefon,adres:musteriAdres,
-    plaka:musteriPlaka,aracMarka,aracModel,sikayet:arizaSikayeti,
-    ekleyen:aktifKullanici.id
-  };
-  const musResp=await apiFetch('/api/musteri','POST',musteriData);
-  const musteriId=musResp.id;
-
   const data={
-    musteriId,servisTipi,aciklama:arizaSikayeti,notlar,atananKullanici,durum:'beklemede',ekleyen:aktifKullanici.id,
-    urunGrubu,urunMarkasi,urunModeli,arizaSikayeti,
+    musteriId:musteriSecimId,servisTipi,aciklama:arizaSikayeti,notlar,atananKullanici,durum:'beklemede',ekleyen:aktifKullanici.id,
+    urun,marka,model,arizaSikayeti,
     yapilanIslemler:servisForm?servisForm.yapilanIslemler:[],parcalar:servisForm?servisForm.parcalar:[],
     fotolar:servisForm?servisForm.fotolar:[],
     indirimOrani:0,kdvOrani:20,
@@ -618,8 +619,9 @@ async function servisKaydet(e){
 function mDetay(){
   const s=db.servisler.find(x=>x.id===modalData);if(!s)return'<p>Bulunamadi</p>';const m=getMusteri(s.musteriId);
   return`<h2>Detay - ${s.fisNo}</h2><div class="flex g2 mb4">${durumBadge(s.durum)}${s.atananKullanici?`<span class="b b-is">Atanan: ${getKullaniciAd(s.atananKullanici)}</span>`:''}</div>
-    <div style="background:#f9fafb;padding:12px;border-radius:8px;margin-bottom:10px"><div class="fr"><div><b>Musteri:</b> ${m?m.adSoyad:'-'}</div><div><b>Tel:</b> ${m?m.telefon:'-'}</div></div><div class="fr"><div><b>Plaka:</b> ${m?m.plaka||'-':'-'}</div><div><b>Arac:</b> ${m?(m.aracMarka||'')+' '+(m.aracModel||''):'-'}</div></div></div>
-    <div style="background:#f9fafb;padding:12px;border-radius:8px;margin-bottom:10px"><div class="fr"><div><b>Urun:</b> ${s.urunGrubu||'-'} ${s.urunMarkasi||''} ${s.urunModeli||''}</div><div><b>Sikayet:</b> ${s.arizaSikayeti||s.aciklama||'-'}</div></div></div>
+    <div style="background:#f9fafb;padding:12px;border-radius:8px;margin-bottom:10px"><div class="fr"><div><b>Musteri:</b> ${m?m.adSoyad:'-'}</div><div><b>Tel:</b> ${m?m.telefon:'-'}</div></div><div class="fr"><div><b>Adres:</b> ${m?m.adres||'-':'-'}</div><div><b>Servis:</b> ${s.servisTipi}</div></div></div>
+    <div style="background:#f9fafb;padding:12px;border-radius:8px;margin-bottom:10px"><div class="fr"><div><b>Urun:</b> ${s.urun||'-'}</div><div><b>Marka:</b> ${s.marka||'-'} &nbsp; <b>Model:</b> ${s.model||'-'}</div></div></div>
+    <div style="background:#f9fafb;padding:12px;border-radius:8px;margin-bottom:10px"><div class="flex jcsb"><b>Sikayet:</b><span>${s.arizaSikayeti||s.aciklama||'-'}</span></div></div>
     <div style="background:#f9fafb;padding:12px;border-radius:8px;margin-bottom:10px"><div class="flex jcsb"><b>Toplam (KDV Dahil):</b><b style="color:var(--p);font-size:16px">${para(s.kdvDahilToplam)}</b></div></div>
     ${(s.fotolar&&s.fotolar.length>0)?`<div class="card"><b>Fotograflar</b><div class="foto-grid" style="margin-top:8px">${s.fotolar.map(f=>`<div class="foto-item"><img src="${f}" onerror="this.style.display='none'"></div>`).join('')}</div></div>`:''}
     ${s.sonuc?`<div class="sonuc-alan"><h4>Sonuc</h4><p style="white-space:pre-wrap;font-size:13px">${s.sonuc}</p></div>`:''}
