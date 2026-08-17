@@ -4,6 +4,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'veritabani.json');
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
 
 function dbOku() {
   try {
@@ -43,8 +44,12 @@ function govdeOku(req) {
   });
 }
 
+const MIME_TYPES = {
+  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+  '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml'
+};
+
 const server = http.createServer(async (req, res) => {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -52,11 +57,24 @@ const server = http.createServer(async (req, res) => {
 
   const url = new URL(req.url, `http://${req.headers.host}`);
 
-  // HTML dosyasi sun
   if (url.pathname === '/' || url.pathname === '/index.html') {
     const html = fs.readFileSync(path.join(__dirname, 'ServisYonetim.html'), 'utf8');
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(html);
+    return;
+  }
+
+  // Serve uploaded files
+  if (url.pathname.startsWith('/uploads/') && req.method === 'GET') {
+    const filePath = path.join(__dirname, decodeURIComponent(url.pathname));
+    const safePath = path.resolve(filePath);
+    if (!safePath.startsWith(UPLOADS_DIR)) { res.writeHead(403); res.end('Forbidden'); return; }
+    try {
+      const data = fs.readFileSync(safePath);
+      const ext = path.extname(safePath).toLowerCase();
+      res.writeHead(200, { 'Content-Type': MIME_TYPES[ext] || 'application/octet-stream' });
+      res.end(data);
+    } catch { res.writeHead(404); res.end('Not found'); }
     return;
   }
 
@@ -104,7 +122,7 @@ const server = http.createServer(async (req, res) => {
     if (!k) return jsonGonder(res, { hata: 'Bulunamadi' }, 404);
     Object.assign(k, body);
     dbKaydet(db);
-    return jsonGonder(res, { ok: true });
+    return jsonGonder(res, { ok: true, kullanici: k });
   }
 
   // API: Kullanici sil
@@ -177,6 +195,19 @@ const server = http.createServer(async (req, res) => {
     db.servisler = db.servisler.filter(x => x.id !== id);
     dbKaydet(db);
     return jsonGonder(res, { ok: true });
+  }
+
+  // API: Upload base64 image
+  if (url.pathname === '/api/upload' && req.method === 'POST') {
+    const body = JSON.parse(await govdeOku(req));
+    if (!body.data || !body.filename) return jsonGonder(res, { hata: 'Eksik veri' }, 400);
+    if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+    const ext = path.extname(body.filename).toLowerCase() || '.jpg';
+    const safeName = 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + ext;
+    const filePath = path.join(UPLOADS_DIR, safeName);
+    const base64Data = body.data.replace(/^data:image\/\w+;base64,/, '');
+    fs.writeFileSync(filePath, base64Data, 'base64');
+    return jsonGonder(res, { url: '/uploads/' + safeName });
   }
 
   res.writeHead(404);
