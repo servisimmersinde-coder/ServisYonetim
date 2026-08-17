@@ -499,7 +499,8 @@ function mServis(){
   const kk=db.kullanicilar.filter(x=>x.rol==='kullanici');
   const musteriListesi=db.musteriler;
   if(!servisForm)servisForm={
-    musteriSecimId:'',
+    musteriSecimId:'',yeniMusteri:false,
+    yAdSoyad:'',yTelefon:'',yAdres:'',
     urun:'',marka:'',model:'',arizaSikayeti:'',
     servisTipi:'',atananKullanici:'',ucret:0,
     yapilanIslemler:[],parcalar:[],notlar:'',fotolar:[]
@@ -510,11 +511,26 @@ function mServis(){
   return`<h2>Yeni Is Kaydi</h2>
     <form onsubmit="servisKaydet(event)">
       <div class="form-bolum">
-        <h3><span>&#128100;</span> Musteri Secimi</h3>
-        <div class="fg"><label>Musteri *</label><select id="sMusteriSecim" required onchange="musteriSecildi()">
-          <option value="">Musteri secin...</option>
-          ${musteriListesi.map(m=>`<option value="${m.id}"${f.musteriSecimId===m.id?' selected':''}>${m.adSoyad} - ${m.telefon}</option>`).join('')}
-        </select></div>
+        <h3><span>&#128100;</span> Musteri Bilgileri</h3>
+        <div class="fg"><label>Musteri Secimi</label>
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <button type="button" class="btn ${!f.yeniMusteri?'btn-ok':'btn-g'} btn-s" onclick="servisForm.yeniMusteri=false;render()">Mevcut Musteri</button>
+            <button type="button" class="btn ${f.yeniMusteri?'btn-ok':'btn-g'} btn-s" onclick="servisForm.yeniMusteri=true;render()">+ Yeni Musteri</button>
+          </div>
+        </div>
+        ${f.yeniMusteri?`
+          <div class="fg"><label>Musteri Adi Soyadi *</label><input type="text" id="sYAdSoyad" value="${f.yAdSoyad}" required placeholder="Adi ve soyadi"></div>
+          <div class="fr">
+            <div class="fg"><label>Telefon *</label><input type="tel" id="sYTelefon" value="${f.yTelefon}" required placeholder="05XX XXX XX XX"></div>
+            <div class="fg"><label>Adres *</label><input type="text" id="sYAdres" value="${f.yAdres}" required placeholder="Musteri adresi"></div>
+          </div>
+        `:`
+          <div class="fg"><label>Musteri Sec *</label><select id="sMusteriSecim" required onchange="musteriSecildi()">
+            <option value="">Musteri secin... (${musteriListesi.length} musteri)</option>
+            ${musteriListesi.map(m=>`<option value="${m.id}"${f.musteriSecimId===m.id?' selected':''}>${m.adSoyad} - ${m.telefon}</option>`).join('')}
+          </select></div>
+          ${musteriListesi.length===0?'<div style="color:#dc2626;font-size:12px;padding:8px;background:#fee2e2;border-radius:6px">Henuz musteri eklenmemis. Once "Yeni Musteri" butonuna tiklayarak musteri ekleyin veya musteri yonetiminden musteri ekleyin.</div>':''}
+        `}
       </div>
       <div class="form-bolum">
         <h3><span>&#128268;</span> Urun Bilgileri</h3>
@@ -590,22 +606,37 @@ function parcaEkle(){const a=g('pAck'),ad=Number(g('pAdet'))||1,bf=Number(g('pFi
 
 async function servisKaydet(e){
   e.preventDefault();
-  const musteriSecimId=g('sMusteriSecim');
+  const f=servisForm;
+  let musteriId='';
+  if(f&&f.yeniMusteri){
+    const yAdSoyad=(g('sYAdSoyad')||'').trim();
+    const yTelefon=(g('sYTelefon')||'').trim();
+    const yAdres=(g('sYAdres')||'').trim();
+    if(!yAdSoyad){alert('Musteri adi soyadi gerekli');return;}
+    if(!yTelefon){alert('Telefon gerekli');return;}
+    if(!yAdres){alert('Adres gerekli');return;}
+    const yeniMusteri={adSoyad:yAdSoyad,telefon:yTelefon,adres:yAdres,urun:g('sUrun')||'',marka:g('sMarka')||'',model:g('sModel')||'',sikayet:g('sAriza')||'',ekleyen:aktifKullanici.id};
+    const mr=await apiFetch('/api/musteri','POST',yeniMusteri);
+    if(mr&&mr.id){musteriId=mr.id;db.musteriler.push(mr);}
+    else{alert('Musteri eklenemedi');return;}
+  }else{
+    musteriId=g('sMusteriSecim');
+    if(!musteriId){alert('Musteri seciniz');return;}
+  }
   const servisTipi=g('sTip'),atananKullanici=g('sAta'),ucret=Number(g('sUcret'))||0;
   const urun=g('sUrun'),marka=g('sMarka'),model=g('sModel');
   const arizaSikayeti=g('sAriza'),notlar=g('sNot')||'';
 
-  if(!musteriSecimId){alert('Musteri seciniz');return;}
   if(!urun){alert('Urun seciniz');return;}
   if(!arizaSikayeti.trim()){alert('Ariza sikayet alanini doldurun');return;}
   if(!servisTipi){alert('Servis tipi zorunlu');return;}
   if(!atananKullanici){alert('Sorumlu kullanici seciniz');return;}
 
   const data={
-    musteriId:musteriSecimId,servisTipi,aciklama:arizaSikayeti,notlar,atananKullanici,durum:'beklemede',ekleyen:aktifKullanici.id,
+    musteriId,servisTipi,aciklama:arizaSikayeti,notlar,atananKullanici,durum:'beklemede',ekleyen:aktifKullanici.id,
     urun,marka,model,arizaSikayeti,
-    yapilanIslemler:servisForm?servisForm.yapilanIslemler:[],parcalar:servisForm?servisForm.parcalar:[],
-    fotolar:servisForm?servisForm.fotolar:[],
+    yapilanIslemler:f?f.yapilanIslemler:[],parcalar:f?f.parcalar:[],
+    fotolar:f?f.fotolar:[],
     indirimOrani:0,kdvOrani:20,
     kdvDahilToplam:ucret,toplamTutar:ucret,indirimliTutar:ucret
   };
