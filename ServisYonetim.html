@@ -155,6 +155,7 @@ table tr:hover{background:#f9fafb}
 const API='';
 let db={kullanicilar:[],musteriler:[],servisler:[]};
 let aktifKullanici=null;let aktifMenu='dashboard';let modal=null;let modalData=null;let servisForm=null;
+(function(){try{const k=localStorage.getItem('sy_kullanici');if(k){aktifKullanici=JSON.parse(k);}}catch(e){}})();
 
 async function apiFetch(url,method='GET',body=null){
   const opts={method,headers:{'Content-Type':'application/json'}};
@@ -332,7 +333,7 @@ function bindLogin(){
     const body=tab==='pc'?{email:g('lEmail').trim(),sifre,tab:'pc'}:{telefon:g('lTel').replace(/\s/g,''),sifre,tab:'tel'};
     const r=await apiFetch('/api/giris','POST',body);
     if(r.hata){document.getElementById('loginHata').innerHTML=`<div class="err">${r.hata}</div>`;return;}
-    aktifKullanici=r.kullanici;aktifMenu='dashboard';render();
+    aktifKullanici=r.kullanici;aktifMenu='dashboard';localStorage.setItem('sy_kullanici',JSON.stringify(r.kullanici));render();
   });
 }
 
@@ -358,7 +359,7 @@ function renderLayout(k){
     </nav>
     <div class="side-ft">
       <div class="uinfo"><div class="uav">${(k.adSoyad||'?')[0]}</div><div><div class="un">${k.adSoyad}</div><div class="ur">${rolAd(k.rol)} | ${k.email||k.telefon||''}</div></div></div>
-      <button class="btn btn-d btn-s" style="width:100%" onclick="aktifKullanici=null;render()">Cikis Yap</button>
+      <button class="btn btn-d btn-s" style="width:100%" onclick="aktifKullanici=null;localStorage.removeItem('sy_kullanici');render()">Cikis Yap</button>
     </div>
   </aside>
   <main class="main" id="mainContent"></main></div>`;
@@ -568,7 +569,7 @@ async function profilKaydet(e){
   if(Object.keys(data).length===0){document.getElementById('profilMesaj').innerHTML='<div class="err">Degisiklik yapilmadi</div>';return;}
   const r=await apiFetch('/api/kullanici/'+k.id,'PUT',data);
   if(r.ok){
-    Object.assign(aktifKullanici,data);
+    Object.assign(aktifKullanici,data);localStorage.setItem('sy_kullanici',JSON.stringify(aktifKullanici));
     document.getElementById('profilMesaj').innerHTML='<div class="ok-msg">Profil basariyla guncellendi</div>';
     setTimeout(()=>{render();},500);
   } else {
