@@ -11,7 +11,7 @@ function dbOku() {
   } catch {
     const ilk = {
       kullanicilar: [{
-        id:'admin1',adSoyad:'Yonetici',email:'admin@admin.com',telefon:'',sifre:'1234',
+        id:'admin1',adSoyad:'Berat Hazar',email:'omersahan4721@gmail.com',telefon:'',sifre:'berathazar21****21',
         rol:'yonetici',aktif:true,tarih:new Date().toISOString()
       }],
       musteriler: [],
